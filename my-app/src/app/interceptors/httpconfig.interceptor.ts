@@ -14,12 +14,15 @@ import { map, catchError } from 'rxjs/operators';
 export class HttpconfigInterceptor implements HttpInterceptor {
 
   constructor() {
+      
   }
 
 
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
 
-    const apiURL: string = 'http://caaierp.us-east-2.elasticbeanstalk.com/api';
+    const apiURL: string = 'http://localhost:9000/api/users';
+    console.log("request",request);
+    console.log("request");
     
     let reqUrl: string = request.url;
     let spy: string = "http";
@@ -39,7 +42,7 @@ export class HttpconfigInterceptor implements HttpInterceptor {
     return next.handle(request).pipe(
         map((event: HttpEvent<any>) => {
             if (event instanceof HttpResponse) {
-                // console.log('event--->>>', event);
+                 console.log('event--->>>', event);
                 // this.errorDialogService.openDialog(event);
             }
             return event;

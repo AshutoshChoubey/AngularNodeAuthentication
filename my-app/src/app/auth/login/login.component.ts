@@ -35,7 +35,7 @@ export class LoginComponent implements OnInit {
     }
     this.genericService.apiPost(this.addForm.value, 'login').subscribe(
       res => {
-        this.auth.setUserAndToken(res.accessToken, res.user, true) ;
+        this.auth.setUserAndToken(res.token, res.user, true) ;
         this.auth.makeLogin();
        // console.log(res);
       },

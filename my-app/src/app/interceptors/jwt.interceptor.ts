@@ -15,7 +15,7 @@ export class JwtInterceptor implements HttpInterceptor {
   }
 
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
-    // console.log("JwtInterceptor");
+     console.log("JwtInterceptor");
     let currentUser = this.auth.isLoggedIn();
     if (currentUser && this.auth.getJwtToken()) {
         request = request.clone({
