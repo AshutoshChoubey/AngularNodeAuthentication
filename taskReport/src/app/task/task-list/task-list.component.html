@@ -1,0 +1,55 @@
+<div class="container-fluid">
+    <table class="table table-sm table-striped table-bordered">
+        <thead>
+            <tr>
+                <th>Title: {{ showPassedData.title }}</th>
+                <th>type: {{ showPassedData.type }}</th>
+                <th>descripition: {{ showPassedData.descripition }}</th>
+                <th>date: {{ showPassedData.createdDate | date:'short' }}</th>
+            </tr>
+        </thead>
+    </table>
+    <table  id="jqueryDataTable" style="size: 10px" class="table table-sm table-striped table-bordered" >
+        <thead>
+            <tr>
+                <th style="white-space: nowrap;float:center"><span
+                    class="required-field"></span>Task </th>
+                <th style="white-space: nowrap;float:center"><span
+                    class="required-field"></span>Time Range </th>
+                <th style="white-space: nowrap;float:center"><span
+                    class="required-field"></span>Status </th>
+                <th style="white-space: nowrap;float:center"><span
+                    class="required-field"></span>Client </th>
+                <th style="white-space: nowrap;float:center"><span
+                    class="required-field"></span>Assign To </th>
+                <th style="white-space: nowrap;float:center"><span class="required-field"></span>QA
+                </th>
+                <th style="white-space: nowrap;float:center"><span
+                    class="required-field"></span>Test </th>
+                <th style="white-space: nowrap;float:center">Learn </th>
+                <th style="white-space: nowrap;float:center">Descripition </th>
+              </tr>
+        </thead>
+        <tbody>
+            <tr  *ngFor="let element of showPassedData.tasklist">
+                <td style="white-space: nowrap;float:center"><span
+                    class="required-field"></span>{{ element.task }} </td>
+                <td style="white-space: nowrap;float:center"><span
+                    class="required-field"></span>{{ element.timeRange }} </td>
+                <td style="white-space: nowrap;float:center"><span
+                    class="required-field"></span> {{ element.status }}</td>
+                <td style="white-space: nowrap;float:center"><span
+                    class="required-field"></span> {{ element.client }}  </td>
+                <td style="white-space: nowrap;float:center"><span
+                    class="required-field"></span> {{ element.assignTo }}  </td>
+                <td style="white-space: nowrap;float:center"><span class="required-field"></span> {{ element.qa }} QA
+                </td>
+                <td style="white-space: nowrap;float:center"><span
+                    class="required-field"></span> {{ element.test }}  </td>
+                <td style="white-space: nowrap;float:center"> {{ element.learn }}  </td>
+                <td style="white-space: nowrap;float:center"> {{ element.description }}  </td>
+            </tr>
+        </tbody>
+    </table>
+   
+  </div>

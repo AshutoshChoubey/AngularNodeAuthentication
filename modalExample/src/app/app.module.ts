@@ -4,17 +4,19 @@ import { NgModule } from '@angular/core';
 
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { AddFileComponent } from './add-file/add-file.component';
+import { AddAndEditComponent } from './add-and-edit/add-and-edit.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
     AppComponent,
-    AddFileComponent
+    AddAndEditComponent
   ],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
-    MaterialDesignModule
+    ReactiveFormsModule,
+    MaterialDesignModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

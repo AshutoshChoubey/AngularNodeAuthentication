@@ -8,10 +8,12 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   constructor(private mms: ModalmanagerService){
-
   }
   openModal()
   {
-    this.mms.AddEdit("sdf")
+    this.mms.AddEdit({text:"passing data from parant component"}).subscribe(res => {
+			console.log(res)
+		}
+		);
   }
 }

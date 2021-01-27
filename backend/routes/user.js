@@ -1,10 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
 const passport = require('passport');
-const key = process.env.JWT_KEY;
 const User = require('../models/User');
+const generateToken = require('../JwtToken/generateToken.js')
 
 /**
  * @route POST api/users/register
@@ -83,10 +82,7 @@ router.post('/login', (req, res) => {
                     name: user.name,
                     email: user.email
                 }
-                jwt.sign(payload, key, {
-                    algorithm: "HS256",
-                    expiresIn: 604800
-                }, (err, token) => {
+                generateToken(payload,(err, token) => {
                     res.status(200).json({
                         success: true,
                         token: `Bearer ${token}`,
