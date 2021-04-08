@@ -26,9 +26,9 @@ export interface PeriodicElement {
 export class TaskComponent implements OnInit ,AfterViewInit  {
 
   
-  dataList: any[];
-  
-  paginationSetup: any = {
+  dataList: any[]; // data comming from database to show in the table
+  moduleAPI: string = 'task/view';
+  paginationSetup: any = { // pagination related setup in the table
     pageLimitOptions: [2, 5, 10],
     pageLimit: 25,
     pageOffset: 0,
@@ -52,6 +52,8 @@ export class TaskComponent implements OnInit ,AfterViewInit  {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild('masterCheckbox') masterCheckbox: MatCheckbox;
+  colName: string;
+  orderBy: any='asc';
   
  
   
@@ -61,7 +63,6 @@ export class TaskComponent implements OnInit ,AfterViewInit  {
   }
   ngOnInit() {
       this.records();
-    console.log("this.dataList",this.dataList);
   }
   ngAfterViewInit() {
     this.dataSource.sort = this.sort;
@@ -74,12 +75,13 @@ export class TaskComponent implements OnInit ,AfterViewInit  {
     }
     console.log("this.sort",this.sort);
   }
-  public records()
+  public records(pageOffset: number = this.paginationSetup.pageOffset, pageLimit: number = this.paginationSetup.pageLimit, colName: string = this.colName, orderBy = this.orderBy)
   {
-    this.genericService.getAll('task/view').subscribe(
+    let url =  `${this.moduleAPI}?offset=${pageOffset}&limit=${pageLimit}&colSort=${colName}&order_by=${orderBy}&`;
+    this.genericService.getAll(url).subscribe(
       data => {
-        console.log(data);
-        this.dataList = data.tasklist;
+       this.paginationSetup.totalRecord= data.tasklist.totalDocs
+        this.dataList = data.tasklist.docs;
         this.prepareMatTable();
       },
       error => {
@@ -203,15 +205,16 @@ export class TaskComponent implements OnInit ,AfterViewInit  {
     return true;
   }
 
-
+// This method is used for the pagination
   sortData(event) {
     if (event.direction != "") {
-    //  this.records(this.paginator.pageIndex, this.paginator.pageSize, event.active, event.direction);
+      this.records(this.paginator.pageIndex, this.paginator.pageSize, event.active, event.direction);
     }
-    console.log(this.paginator);
+    console.log(event);
   }
   loadPage() {
-    //this.records(this.paginator.pageIndex, this.paginator.pageSize, this.colName, this.orderBy);
+    console.log("pagination", this.paginator);
+    this.records(this.paginator.pageIndex, this.paginator.pageSize, this.colName, this.orderBy);
   }
 
 

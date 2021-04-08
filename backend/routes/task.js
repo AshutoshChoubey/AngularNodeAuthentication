@@ -35,14 +35,43 @@ router.post('/add', (req, res) => {
 
 });
 router.get('/view', (req, res) => {
-    Task.find(function (err, Task) {
+    // const myCustomLabels = {
+    //     totalDocs: 'itemCount',
+    //     docs: 'itemsList',
+    //     limit: 'perPage',
+    //     page: 'currentPage',
+    //     nextPage: 'next',
+    //     prevPage: 'prev',
+    //     totalPages: 'pageCount',
+    //     pagingCounter: 'slNo',
+    //     meta: 'paginator',
+    //   };
+      
+    //   const options = {
+    //     page: 1,
+    //     limit: 10,
+    //     customLabels: myCustomLabels,
+    //   };
+      
+if (req.query.colSort=='undefined')
+{
+    req.query.colSort='title'
+}
+    const options = {
+        offset: req.query.offset,
+        limit: req.query.limit,
+        sort: {[req.query.colSort]:req.query.order_by}
+    };
+console.log(options);
+    Task.paginate({}, options, function (err, result) {
         if (err) return console.error(err);
         return res.status(200).json({
             success: true,
             msg: "Listed",
-            tasklist: Task
+            tasklist: result
         });
     });
+
 });
 
 module.exports = router;

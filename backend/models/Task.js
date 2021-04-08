@@ -1,6 +1,8 @@
 const mongoose=require('mongoose');
 const Schema=mongoose.Schema;
-const validator = require('validator')
+const validator = require('validator');
+const mongoosePaginate = require('mongoose-paginate-v2');
+
 // Create the User Schema
 const CollectionSchema = new Schema({
     title: {
@@ -41,6 +43,7 @@ const CollectionSchema = new Schema({
         default: null
     }
 });
+CollectionSchema.plugin(mongoosePaginate);
 const Task = mongoose.model('Task', CollectionSchema)
 
 module.exports = Task
