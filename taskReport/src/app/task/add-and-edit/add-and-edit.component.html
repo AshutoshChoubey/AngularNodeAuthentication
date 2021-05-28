@@ -4,7 +4,7 @@
       <div class="card-header text-center">Add Daily Task Report</div>
       <div class="card-body">
         <div class="row">
-          <div class="col-sm-4">
+          <div class="col-sm-4" *ngIf="editData.selectedListId.length <= 1">
             <mat-form-field appearance="outline">
               <mat-label>Title</mat-label>
               <input matInput formControlName="title">
@@ -13,21 +13,24 @@
               </mat-error>
             </mat-form-field>
           </div>
-          <div class="col-sm-3">
+          <div [ngClass]="editData.selectedListId.length > 1 ? 'col-sm-6' : 'col-sm-3'">
             <mat-form-field appearance="outline">
               <mat-label>type</mat-label>
               <mat-select formControlName="type">
-                <mat-option value="">
+                <mat-option value="None">
                   None
                 </mat-option>
-                <mat-option value="1">
+                <mat-option value="Plan">
                   Plan
                 </mat-option>
-                <mat-option value="1">
+                <mat-option value="Rutine">
                   Rutine
                 </mat-option>
-                <mat-option value="1">
+                <mat-option value="R&D">
                   R&D
+                </mat-option>
+                <mat-option value="Client Work">
+                  Client Work
                 </mat-option>
                 <!-- <mat-option *ngFor="let parentPOSDepartment of parentPOSDepartment"
                             [value]="parentPOSDepartment.id">
@@ -36,16 +39,16 @@
               </mat-select>
             </mat-form-field>
           </div>
-          <div class="col-sm-4">
+          <div [ngClass]="editData.selectedListId.length > 1 ? 'col-sm-6' : 'col-sm-4'">
             <mat-form-field appearance="outline">
               <mat-label>descripition</mat-label>
               <textarea matInput formControlName="descripition"></textarea>
             </mat-form-field>
           </div>
         </div>
-        <div class="row">
-          <div class="col-sm-12 table-responsive" formArrayName="itemRows">
-            <table class="table">
+        <div  *ngIf="editData.selectedListId.length <= 1">
+          <div class="row"  class="col-sm-12 table-responsive" formArrayName="itemRows">
+            <table class="table" >
               <thead>
                 <tr>
                   <th style="white-space: nowrap;float:center"><span
@@ -68,7 +71,7 @@
                 </tr>
               </thead>
               <tbody>
-                <tr *ngFor="let itemrow of addmore.controls.itemRows['controls']; let i=index" [formGroupName]="i">
+                <tr  *ngFor="let itemrow of addmore.controls.itemRows['controls']; let i=index" [formGroupName]="i">
                   <td style="white-space: nowrap;">
                     <mat-form-field appearance="outline">
                       <mat-label>Task</mat-label>

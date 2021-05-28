@@ -1,5 +1,8 @@
+import { AuthService } from './../../services/auth.service';
+import { GenericService } from './../../services/generic.service';
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 
 function ConfirmedValidator(controlName: string, matchingControlName: string) {
   return (formGroup: FormGroup) => {
@@ -25,14 +28,17 @@ export class SignupComponent implements OnInit {
 
   addForm: FormGroup;
   submitted: boolean = false;
-  constructor(private fb: FormBuilder) {
+  apiObject : any = "users/register"
+  error: string;
+  
+  constructor(private fb: FormBuilder, private gs : GenericService,private auth: AuthService,private router: Router) {
     this.addForm = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(3)]],
       email: ['', [Validators.required, Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$')]],
       password: ['', [Validators.required, Validators.minLength(3)]],
-      passwordConfirmation: ['', [Validators.required, Validators.minLength(3)]]
+      password_confirmation: ['', [Validators.required, Validators.minLength(3)]]
     }, {
-      validator: ConfirmedValidator('password', 'passwordConfirmation')
+      validator: ConfirmedValidator('password', 'password_confirmation')
     });
   }
   checkPasswords(group: FormGroup) { // here we have the 'passwords' group
@@ -49,7 +55,16 @@ export class SignupComponent implements OnInit {
     console.log('here');
   }
   onSubmit(): void {
-    console.log(this.addForm);
+    this.gs.apiPost(this.addForm.value,this.apiObject).subscribe( 
+      res => {
+      alert(res.msg);
+      if(res.success){
+        this.router.navigateByUrl("login");
+      }
+     
+    },  error => {
+      this.error = 'Unable to connect server. Please try again after some time.';
+    })
     this.submitted = true;
   }
 

@@ -4,8 +4,8 @@
       <div class="example-button-row float-right">
         <button mat-button *ngIf="this.selectedList.length" mat-raised-button mat-fab color="accent"
           (click)="openModal()">Edit</button>
-        <button mat-button mat-raised-button mat-fab color="primary" (click)="openModal()">+</button>
-        <button mat-fab *ngIf="this.selectedList.length" color="warn"
+        <button *ngIf="this.selectedList.length==0" mat-button mat-raised-button mat-fab color="primary" (click)="openModal()">+</button>
+        <button mat-fab (click)="delete()" *ngIf="this.selectedList.length" color="warn"
           aria-label="Example icon button with a delete icon">
           <mat-icon>delete</mat-icon>
         </button>
@@ -62,8 +62,7 @@
         </ng-container>
         
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns; let i = index;"
-          (click)="setSelectClick(row, $event)" (mousedown)="setSelectMD(i)" (mouseup)="setSelectMU(i)"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns; let i = index;"></tr>
       </table>
       <mat-paginator [hidden]="0" [pageSizeOptions]="paginationSetup.pageLimitOptions"
       [pageSize]="paginationSetup.pageLimit" [length]="paginationSetup.totalRecord" showFirstLastButtons>

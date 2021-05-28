@@ -21,15 +21,50 @@ export class TaskListComponent implements OnInit {
   public jqueryDataTable()
   {
      $(function(){
-    $('#jqueryDataTable').DataTable( {
+      var table =$('#jqueryDataTable').DataTable( {
         dom: 'Bfrtip',
         buttons: [
-            { extend: 'copyHtml5', footer: true ,title: 'Product Purchase Report'},
-            { extend: 'excelHtml5', footer: true ,title: 'Product Purchase Report'},
-            { extend: 'csvHtml5', footer: true,title: 'Product Purchase Report' },
-            { extend: 'pdfHtml5', footer: true ,title: 'Product Purchase Report',orientation: 'landscape',pageSize:'A3'}
-        ]
+            { extend: 'copyHtml5', footer: true ,title: 'Task Report'},
+            { extend: 'excelHtml5', footer: true ,title: 'Task Report'},
+            { extend: 'csvHtml5', footer: true,title: 'Task Report' },
+            { extend: 'pdfHtml5', footer: true ,title: 'Task Report',orientation: 'landscape',pageSize:'A3'}
+        ],
+        initComplete: function () {
+          // Apply the search
+          this.api().columns().every( function () {
+              var that = this;
+    
+              $( 'input', this.footer() ).on( 'keyup change clear', function () {
+                  if ( that.search() !== this.value ) {
+                      that
+                          .search( this.value )
+                          .draw();
+                  }
+              } );
+          } );
+      }
     } );
+    $('#jqueryDataTable').on( 'click', 'tr', function () {
+      if ( $(this).hasClass('selected') ) {
+          $(this).removeClass('selected');
+      }
+      else {
+          table.$('tr.selected').removeClass('selected');
+          $(this).addClass('selected');
+      }
+  } );
+
+
+    $('td.toggle-vis').on( 'click', function (e) {
+        e.preventDefault();
+ 
+        // Get the column API object
+        var column = table.column( $(this).attr('data-column') );
+ 
+        // Toggle the visibility
+        column.visible( ! column.visible() );
+    } );
+
 
       });
   }

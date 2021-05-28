@@ -1,3 +1,4 @@
+import { Router } from '@angular/router';
 import { GenericService } from './../../services/generic.service';
 import { ModalmanagerService } from './../../services/modalmanager.service';
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
@@ -58,7 +59,7 @@ export class TaskComponent implements OnInit ,AfterViewInit  {
  
   
 
-  constructor(private mms: ModalmanagerService, private _snackBar: MatSnackBar,private genericService : GenericService) {
+  constructor(private mms: ModalmanagerService, private _snackBar: MatSnackBar,private genericService : GenericService , private router:Router) {
 
   }
   ngOnInit() {
@@ -83,6 +84,7 @@ export class TaskComponent implements OnInit ,AfterViewInit  {
        this.paginationSetup.totalRecord= data.tasklist.totalDocs
         this.dataList = data.tasklist.docs;
         this.prepareMatTable();
+        this.setPreSelect();
       },
       error => {
         this.error = 'Unable to connect server. Please try again after some time.';
@@ -91,120 +93,50 @@ export class TaskComponent implements OnInit ,AfterViewInit  {
   }
 
 
-  // related to datatable
-  setSelectMD(i: number) {
-    this.mouseDownRowID = i;
-    this.mouseHit = {
-      down: 0,
-      up: 0
-    };
-    this.lastWay = '';
-  }
-
-  setSelectMU(i: number) {
-    this.mouseUpRowID = i;
-    this.setSelectMouse();
-  }
+ 
   prepareMatTable() {
     this.dataSource = new MatTableDataSource<PeriodicElement>(this.dataList);
   }
-  setSelectMouse(isSelect: boolean = true) {
-    if ((this.mouseDownRowID || this.mouseDownRowID >= 0) && (this.mouseUpRowID || this.mouseUpRowID >= 0) && this.mouseDownRowID != this.mouseUpRowID) {
-      let startRow: number;
-      let endRow: number;
-      let i: number;
-      if (this.mouseDownRowID >= this.mouseUpRowID) {
-        endRow = this.mouseDownRowID;
-        startRow = this.mouseUpRowID;
-      }
-      else {
-        startRow = this.mouseDownRowID;
-        endRow = this.mouseUpRowID;
-      }
-      for (i = startRow; i <= endRow; i++) {
-        if (typeof (this.dataSource.data[i]) != 'undefined') {
-          this.setSelect(this.dataSource.data[i], isSelect);
-        }
-      }
-    }
-  }
-  setSelectShift(way: string) {
-    if (this.mouseUpRowID || this.mouseUpRowID >= 0) {
-      if (way == 'up' && (this.mouseHit.up >= 1 || this.mouseDownRowID > 0)) {
-        if (this.mouseHit.up >= 1) {
-          this.mouseDownRowID = this.mouseHit.up - 1;
-        }
-        else {
-          if (this.mouseDownRowID > this.mouseUpRowID) {
-            this.mouseDownRowID = this.mouseUpRowID - 1;
-          }
-          else {
-            this.mouseDownRowID = this.mouseDownRowID - 1;
-          }
-        }
-        this.mouseHit.up = this.mouseDownRowID;
-      }
-      else if (way == 'down') {
-        if (this.mouseHit.down > 0) {
-          this.mouseDownRowID = this.mouseHit.down + 1;
-        }
-        else {
-          if (this.mouseDownRowID < this.mouseUpRowID) {
-            this.mouseDownRowID = this.mouseUpRowID + 1;
-          }
-          else {
-            this.mouseDownRowID = this.mouseDownRowID + 1;
-          }
-        }
-        this.mouseHit.down = this.mouseDownRowID;
-      }
-      if (typeof (this.dataSource.data[this.mouseDownRowID]) != 'undefined') {
-        this.setSelectMouse();
-      }
-    }
-  }
+  
+  
 
-  setSelectFirst() {
-    if (!this.selection.isSelected(this.dataSource.data[0])) {
-      this.selection.clear();
-      this.dataSource.data.forEach((value, key) => {
-        this.selectedList = this.selectedList.filter((list) => list != value._id);
-        this.selectedListData = this.selectedListData.filter((list) => list.id != value._id);
-      });
-      this.setSelectMD(0);
-      this.mouseUpRowID = 0;
-      this.setSelect(this.dataSource.data[0], true);
-    }
-    else {
-      this.selection.clear();
-      this.dataSource.data.forEach((value, key) => {
-        this.selectedList = this.selectedList.filter((list) => list != value._id);
-        this.selectedListData = this.selectedListData.filter((list) => list.id != value._id);
-      });
-    }
-  }
+  // setSelectFirst() {
+  //   console.log("this.dataSource.data[0]",this.dataSource.data[0])
+  //   if (!this.selection.isSelected(this.dataSource.data[0])) {
+  //     this.selection.clear();
+  //     this.dataSource.data.forEach((value, key) => {
+  //       this.selectedList = this.selectedList.filter((list) => list != value._id);
+  //       this.selectedListData = this.selectedListData.filter((list) => list.id != value._id);
+  //     });
+
+  //     this.setSelect(this.dataSource.data[0], true);
+  //   }
+  //   else {
+  //     this.selection.clear();
+  //     this.dataSource.data.forEach((value, key) => {
+  //       this.selectedList = this.selectedList.filter((list) => list != value._id);
+  //       this.selectedListData = this.selectedListData.filter((list) => list.id != value._id);
+  //     });
+  //   }
+  // }
   setSelect(row, isSelected?) {
-    if (isSelected) {
-      this.selection.select(row);
-    }
-    else {
-      this.selection.toggle(row);
-    }
-    this.selectedList = this.selectedList.filter((list) => list != row._id);
-    this.selectedListData = this.selectedListData.filter((list) => list.id != row._id);
-    if (this.selection.isSelected(row)) {
-      this.selectedList.push(row._id);
-      this.selectedListData.push(row);
-    }
-    if (this.selectedList.length) {
-     // this.edit();
-    }
-    else {
-      //this.openSidebar = false;
-    }
-    return true;
-  }
-
+	this.selection.toggle(row);
+		if (this.selection.isSelected(row)) {
+			this.selectedList.push(row._id);
+			this.selectedListData.push(row);
+		}
+		else {
+			this.selectedList = this.selectedList.filter((list) => list != row._id);
+			this.selectedListData = this.selectedListData.filter((list) => list._id != row._id);
+		}
+	}
+  setPreSelect() {
+		this.dataSource.data.forEach((value, key) => {
+			if (this.selectedList.includes(value._id)) {
+				this.selection.select(value);
+			}
+		});
+	}
 // This method is used for the pagination
   sortData(event) {
     if (event.direction != "") {
@@ -216,32 +148,12 @@ export class TaskComponent implements OnInit ,AfterViewInit  {
     console.log("pagination", this.paginator);
     this.records(this.paginator.pageIndex, this.paginator.pageSize, this.colName, this.orderBy);
   }
-
-
-  setSelectClick(row, event) {
-		if (typeof (event.shiftKey) != 'undefined' && event.shiftKey) {
-			this.setSelect(row);
-		}
-		else {
-			if (this.selection.isSelected(row)) {
-				this.setSelect(row, false);
-			}
-			else {
-				this.selection.clear();
-				this.dataSource.data.forEach((value, key) => {
-					this.selectedList = this.selectedList.filter((list) => list != value._id);
-					this.selectedListData = this.selectedListData.filter((list) => list.id != value._id);
-				});
-				this.setSelect(row);
-			}
-		}
-  }
   masterToggle() {
     if (this.isAllSelected()) {
       this.selection.clear();
       this.dataSource.data.forEach((value, key) => {
         this.selectedList = this.selectedList.filter((list) => list != value._id);
-        this.selectedListData = this.selectedListData.filter((list) => list.id != value._id);
+        this.selectedListData = this.selectedListData.filter((list) => list._id != value._id);
       });
     }
     else {
@@ -268,11 +180,32 @@ export class TaskComponent implements OnInit ,AfterViewInit  {
     return numSelected === numRows;
   }
   openModal() {
-    this.mms.AddEdit({ text: "passing data from parant component" }).subscribe(res => {
+    this.mms.AddEdit({ editData: this.selectedListData,selectedListId: this.selectedList }).subscribe(res => {
       if (res) {
         this.openSnackBar(res.msg, "Done");
+        this.records();
+        this.selection.clear();
+    		this.selectedList = [];
+    		this.selectedListData = [];
       }
+     
     }
+    );
+  }
+  delete()
+  {
+    this.genericService.apiPost(this.selectedList, 'task/delete').subscribe(
+      res => {
+        console.log(res);
+        this.openSnackBar(res.msg, "Done");
+        this.records();
+        this.selection.clear();
+    		this.selectedList = [];
+    		this.selectedListData = [];
+      },
+      error => {
+        this.error = 'Unable to connect server. Please try again after some time.';
+      }
     );
   }
 public showtaskDetailsModal (event)
