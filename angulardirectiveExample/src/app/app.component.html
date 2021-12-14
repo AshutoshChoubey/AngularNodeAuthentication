@@ -1,13 +1,13 @@
-<h1>My First Attribute Directive</h1>
-
+<h1 *ngIf="">My First Attribute Directive</h1>
 <h4>Pick a highlight color</h4>
-<div>
-  <input type="radio" name="colors" (click)="color='lightgreen'">Green
+<div class="{{ color }}">
+  <input type="radio"  name="colors"  (click)="color='lightgreen'">Green
   <input type="radio" name="colors" (click)="color='yellow'">Yellow
   <input type="radio" name="colors" (click)="color='cyan'">Cyan
 </div>
+<div>Current Color {{ color}}</div>
 <p [appHighlight]="color">Highlight me!</p>
-
+<input type="text" [(ngModel)]="color"  />
 <p [appHighlight]="color" defaultColor="violet">
   Highlight me too!
 </p>
@@ -17,3 +17,15 @@
 
 <p [appHighlight]="'yellow'">Highlighted in yellow</p>
 <p appHighlight="orange">Highlighted in orange</p>
+
+<!-- The different types of Angular directives are as follows:
+
+Components—directives with a template. This type of directive is the most common directive type.
+Attribute directives—directives that change the appearance or behavior of an element, component, or another directive.
+Structural directives—directives that change the DOM layout by adding and removing DOM elements. -->
+
+<!-- Many NgModules such as the RouterModule and the FormsModule define their own attribute directives. The most common attribute directives are as follows:
+
+NgClass—adds and removes a set of CSS classes.
+NgStyle—adds and removes a set of HTML styles.
+NgModel—adds two-way data binding to an HTML form element. -->

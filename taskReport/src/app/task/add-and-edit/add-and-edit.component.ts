@@ -1,5 +1,5 @@
 import { GenericService } from './../../services/generic.service';
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit, Inject, OnChanges, SimpleChanges } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
@@ -17,6 +17,11 @@ export class AddAndEditComponent implements OnInit {
   constructor(private _fb: FormBuilder, public dialogRef: MatDialogRef<AddAndEditComponent>,
     @Inject(MAT_DIALOG_DATA) public editData: any, private genericService: GenericService) { }
 
+    ngOnChanges(SampleChange:SimpleChanges)
+    {
+      console.log("SampleChange",SampleChange);
+   console.log(this._fb);
+    }
   ngOnInit() {
     console.log("_editData",this.editData)
     if ((this.editData) && (this.editData.selectedListId.length > 1))
@@ -91,6 +96,7 @@ export class AddAndEditComponent implements OnInit {
 
   onSubmit() {
     this.submitted = true;
+    console.log(this.addmore);
     if (this.addmore.invalid) {
       return;
     }

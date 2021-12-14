@@ -6,14 +6,14 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class GenericService {
-
+// worldgyan.com
   constructor(private http: HttpClient) {
   }
-  apiPost(params, apiObject): Observable<any> {
-    return this.http.post(`/${apiObject}`, JSON.stringify(params));
+  apiPost(params, apiEnd): Observable<any> {
+    return this.http.post(`/${apiEnd}`, JSON.stringify(params));
   }
-  apiPut(params, apiObject): Observable<any> {
-    return this.http.put(`/${apiObject}/`, JSON.stringify(params));
+  apiPut(params, apiEnd): Observable<any> {
+    return this.http.put(`/${apiEnd}/`, JSON.stringify(params));
   }
   getAll(apiObject): Observable<any> {
     return this.http.get(`/${apiObject}/`);

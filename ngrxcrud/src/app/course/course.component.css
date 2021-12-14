@@ -1,0 +1,7 @@
+input {
+    border: 2px solid green
+}
+table{
+    width: 100%;
+    padding: 10px;
+}

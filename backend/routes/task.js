@@ -11,8 +11,6 @@ router.use(async (req, res, next) => {
     //console.log(req.headers.authorization);
     if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
         token = req.headers.authorization.split(' ')[1];
-        console.log(token);
-      
     }
     if(!token) {
         return res.status(401).json({
@@ -20,19 +18,21 @@ router.use(async (req, res, next) => {
             msg: "Sorry Token not found. you are not authorized"
         });
      }
-     const decoded = await promisify(jwt.verify)(token, key);
-       // console.log("decoded",decoded._id)
-next();
+     jwt.verify(token, key, function (err, decoded){
+        if (err){
+            console.log(decoded);
+            return res.status(401).json({
+                success: false,
+                msg: "Sorry Token Expired"
+            });
+        } else {
+            next();
+        }
+    });
+//next();
       
 } )
 router.post('/add', (req, res) => {
-    // invalid token - synchronous
-    // try {
-    //     var decoded = jwt.verify(token, 'wrong-secret');
-    //   } catch(err) {
-    //     // err
-    //   }
-
     let {
         title,
         type,

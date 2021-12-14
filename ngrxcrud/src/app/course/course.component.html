@@ -1,0 +1,31 @@
+<form [formGroup]="formData"  (ngSubmit)="formData.valid && onSubmit()" >
+    <table >
+        <tr>
+            <th colspan="2">Course</th>
+        </tr>
+        <tr [hidden]="true">
+            <td> ID</td>
+            <td><input  formControlName="cId" type="text" ></td>
+        </tr>
+        <tr>
+            <td> Name</td>
+            <td><input formControlName="cName" type="text" ></td>
+        </tr>
+        <tr>
+            <td> Description</td>
+            <td><input formControlName="cDes" type="text" ></td>
+        </tr>
+
+        <tr>
+            <td> Price</td>
+            <td><input formControlName="cPrice" type="number" ></td>
+        </tr>
+        <tr>
+            <td> offer</td>
+            <td><input formControlName="cOffer" type="number" ></td>
+        </tr>
+        <tr>
+            <td colspan="2"><input type="submit" value="Submit" /></td>
+        </tr>
+    </table>
+</form>

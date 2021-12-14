@@ -21,10 +21,11 @@ export class HttpconfigInterceptor implements HttpInterceptor {
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
 
     const apiURL: string = 'http://localhost:9000/api';
-    
+    // console.log(request);
+    // http://localhost:9000/api+'http://localhost:7000/api';
     let reqUrl: string = request.url;
     let spy: string = "http";
-    if (reqUrl.search(spy) >= 0) { }
+    if (reqUrl.search("http") >= 0) { }
     else {
         request = request.clone({ url: apiURL + request.url });
     }
