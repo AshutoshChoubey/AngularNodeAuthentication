@@ -1,6 +1,7 @@
-<app-child></app-child>
+<app-child [message]="passwithinput"></app-child>
 <form [formGroup]="initForm" (ngSubmit)="submit()">
   <input type="text" id="user" placeholder="User Name" formControlName="user" />
   <input type="text" id="pass" placeholder="password" formControlName="pass" />
   <button type="submit" id="submit" >Submit</button>
 </form>
+<div id="data">{{ data | json}}</div>
