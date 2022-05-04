@@ -11,39 +11,30 @@ import { ChildComponent } from './child/child.component';
 import { GenericService } from './generic.service';
 import { By } from '@angular/platform-browser';
 import { ApiService } from './api.service';
+import { Component } from '@angular/core';
 
 describe('App Component', () => {
   let fixture: ComponentFixture<AppComponent>;
   let genericService: jasmine.SpyObj<GenericService>;
-  let spyApi = jasmine.createSpyObj('AuthService', ['postData']);
-  spyApi.postData.and.returnValue(
-    of({
-      status: 303,
-      data: { user: '303worldgyan', pass: '303ashutosh@123' },
-    })
-  );
-
-  // const setup = (
-  //   genericServiceReturnValue?: jasmine.SpyObjMethodNames<GenericService>
-  // ) => {
-  //   let genericServicespy = jasmine.createSpyObj('GenericService', ['postData']);
-  //   genericServicespy.postData.and.returnValue(genericServiceReturnValue);
-  // };
+  let spyApi: jasmine.SpyObj<ApiService>=jasmine.createSpyObj("ApiService",['postData'])
+  spyApi.postData.and.returnValue(of({
+    status: 205,
+    data: { user: '205worldgyan', pass: '205345Ad@sdf' },
+  }))
+  
+  const setup = (
+    genericServiceReturnValue?: jasmine.SpyObjMethodNames<GenericService>
+  ) => {
+    genericService = jasmine.createSpyObj<GenericService>('GenericService', {
+      postData: of({
+        status: 202,
+        data: { user: 'worldgyan', pass: '345Ad@sdf' },
+      }),
+      ...genericServiceReturnValue,
+    });
+  };
 
   beforeEach(async () => {
-  
-    // const setup = (
-    //   genericServiceReturnValue?: jasmine.SpyObjMethodNames<GenericService>
-    // ) => {
-    //   genericService = jasmine.createSpyObj<GenericService>('GenericService', {
-    //     postData: of({
-    //       status: 202,
-    //       data: { user: 'worldgyan', pass: 'ashutosh@123' },
-    //     }),
-    //     ...genericServiceReturnValue,
-    //   });
-    // };
-
     await TestBed.configureTestingModule({
       imports: [ReactiveFormsModule],
       declarations: [AppComponent, ChildComponent],
@@ -57,73 +48,39 @@ describe('App Component', () => {
     fixture = TestBed.createComponent(AppComponent);
     fixture.detectChanges();
   });
-
-  it('Check Generic Service postData method', () => {
+  it('check generic service postData', () => {
     let component = fixture.componentInstance;
-    let mockdata;
-    fixture.detectChanges();
-    const setup = (
-      genericServiceReturnValue?: jasmine.SpyObjMethodNames<GenericService>
-    ) => {
-      genericService = jasmine.createSpyObj<GenericService>('GenericService', {
-        postData: of({
-          status: 202,
-          data: { user: 'worldgyan', pass: 'ashutosh@123' },
-        }),
-        ...genericServiceReturnValue,
-      });
-    };
-    setup();
-    fixture.detectChanges();
-    genericService.postData(component.initForm.value).subscribe((val) => {
-      mockdata = val;
-    });
+    let returnMockData;
 
-    expect(mockdata).toEqual({
+    setup();
+    genericService.postData(component.initForm.value).subscribe((val) => {
+      returnMockData = val;
+    });
+    expect(returnMockData).toEqual({
       status: 202,
-      data: {
-        user: 'worldgyan',
-        pass: 'ashutosh@123',
-      },
+      data: { user: 'worldgyan', pass: '345Ad@sdf' },
     });
   });
-  it('Check Generic Service postData method with return value', () => {
+
+  it('check generic Service postData method with return value', () => {
     let component = fixture.componentInstance;
-    let mockdata;
-    const setup = (
-      genericServiceReturnValue?: jasmine.SpyObjMethodNames<GenericService>
-    ) => {
-      genericService = jasmine.createSpyObj<GenericService>('GenericService', {
-        postData: of({
-          status: 202,
-          data: { user: 'worldgyan', pass: 'ashutosh@123' },
-        }),
-        ...genericServiceReturnValue,
-      });
-    };
+    let returnMockData;
+
     setup({
       postData: of({
-        status: 202,
-        data: {
-          user: '11sdf',
-          pass: '11dfg456A@12',
-        },
+        status: 505,
+        data: { user: '505worldgyan', pass: '505345Ad@sdf' },
       }),
     });
-    fixture.detectChanges();
     genericService.postData(component.initForm.value).subscribe((val) => {
-      mockdata = val;
+      returnMockData = val;
     });
-    expect(mockdata).toEqual({
-      status: 202,
-      data: {
-        user: '11sdf',
-        pass: '11dfg456A@12',
-      },
+    expect(returnMockData).toEqual({
+      status: 505,
+      data: { user: '505worldgyan', pass: '505345Ad@sdf' },
     });
   });
-
-  it('check the form controls  from template to component', async () => {
+  it('check form control from template to component', () => {
     let component = fixture.componentInstance;
     component.ngOnInit();
     fixture.detectChanges();
@@ -132,103 +89,71 @@ describe('App Component', () => {
     const pass: HTMLInputElement =
       fixture.debugElement.nativeElement.querySelector('#pass');
     user.value = 'ashutosh';
-    pass.value = 'ASHUTOSH@123';
+    pass.value = 'A23@sdfdf';
     user.dispatchEvent(new Event('input'));
     pass.dispatchEvent(new Event('input'));
-
     fixture.detectChanges();
     expect(component.initForm.value).toEqual({
       user: 'ashutosh',
-      pass: 'ASHUTOSH@123',
+      pass: 'A23@sdfdf',
     });
   });
 
-  it('check the form controls from components to template', async () => {
+  it('check from component tro template', () => {
     let component = fixture.componentInstance;
-    fixture.detectChanges();
-    fixture.componentInstance.initForm.setValue({
-      user: 'ashutosh',
-      pass: 'Wg@123',
+    // component.ngOnInit();
+
+    component.initForm.setValue({
+      user: 'userName',
+      pass: 'User@Name1',
     });
-    component.ngOnInit();
     fixture.detectChanges();
     const user: HTMLInputElement =
       fixture.debugElement.nativeElement.querySelector('#user');
     const pass: HTMLInputElement =
       fixture.debugElement.nativeElement.querySelector('#pass');
+    //console.log(user.value,pass.value)
     expect(fixture.componentInstance.initForm.value.user).toBe(user.value);
-    expect(fixture.componentInstance.initForm.value.pass).toBe(pass.value);
+    expect(component.initForm.value.pass).toBe(pass.value);
   });
-
-  it('should be valid if form value is valid', () => {
-    let component = fixture.componentInstance;
-    component.initForm.setValue({
-      user: 'ashutosh',
-      pass: 'Wg@q34qwerty',
-    });
-    fixture.detectChanges();
-    expect(component.initForm.valid).toEqual(true);
-  });
-  it('should be Invalid if form value is Invalid', () => {
-    let component = fixture.componentInstance;
-    component.initForm.setValue({
-      user: 'ashutosh',
-      pass: 'Wghjk',
-    });
-    fixture.detectChanges();
-    expect(component.initForm.valid).toEqual(false);
-  });
-
-  it('submits the form successfully', fakeAsync(async () => {
-    
-    fixture.detectChanges();
-    fixture = TestBed.createComponent(AppComponent);
-    let component = fixture.componentInstance;
-    fixture.detectChanges();
-    component.ngOnInit();
-    fixture.detectChanges();
+  it("submit the form successfully",()=>{
     const user: HTMLInputElement =
-      fixture.debugElement.nativeElement.querySelector('#user');
-    const pass: HTMLInputElement =
-      fixture.debugElement.nativeElement.querySelector('#pass');
+    fixture.debugElement.nativeElement.querySelector('#user');
+  const pass: HTMLInputElement =
+    fixture.debugElement.nativeElement.querySelector('#pass');
     const submit: HTMLInputElement =
-      fixture.debugElement.nativeElement.querySelector('#submit');
-    const form = fixture.debugElement.query(By.css('form'));
-
-    user.value = 'ashutosh';
-    pass.value = 'As@34@123';
-    fixture.detectChanges();
+    fixture.debugElement.nativeElement.querySelector('#submit');
+    user.value="test";
+    pass.value="passP@12"
+    fixture.detectChanges()
     user.dispatchEvent(new Event('input'));
     pass.dispatchEvent(new Event('input'));
     submit.click();
     submit.dispatchEvent(new Event('click'));
-    form.triggerEventHandler('submit', {});
     fixture.detectChanges();
-    expect(component.data).toEqual({
-      status: 303,
-      data: { user: '303worldgyan', pass: '303ashutosh@123' },
-    });
-    expect(spyApi.postData).toHaveBeenCalledWith(user.value, pass.value);
-    expect(component.initForm.value).toEqual({
-      user: 'ashutosh',
-      pass: 'As@34@123',
-    });
+    console.log(fixture.componentInstance.data)
+    expect(fixture.componentInstance.data).toEqual(
+      {
+        "status": 205,
+        "data": {
+            "user": "205worldgyan",
+            "pass": "205345Ad@sdf"
+        }
+    })
 
-  }));
-  it('Form should not submit successfully if invalid', fakeAsync(() => {
-    const formData = {
-      "user": "invaliduser",
-      "pass": "ashutosh123"
-    };
-    let component = fixture.componentInstance;
-    fixture.detectChanges();
-    component.initForm.setValue(formData);
+  })
+  it("form should not submit if invalid",()=>{
+    const data={
+      user:"inValidUser",
+      pass:"sdfsdf"
+    }
+    let component=fixture.componentInstance
+    component.initForm.setValue(data);
+    fixture.detectChanges()
     component.submit();
-    tick();
-    fixture.detectChanges();
-console.log(component.initForm.invalid)
-    expect(component.initForm.invalid).toEqual(true);
-    // expect(spyApi.postData).toHaveBeenCalledTimes(0);
-    expect(spyApi.postData).toHaveBeenCalled();
-  }));
+    fixture.detectChanges()
+    expect(component.initForm.invalid).toEqual(true)
+    expect(spyApi.postData).toHaveBeenCalledTimes(0);
+    // expect(spyApi.postData).toHaveBeenCalled();
+  })
 });
